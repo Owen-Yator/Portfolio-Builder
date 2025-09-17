@@ -1,6 +1,6 @@
 import { Portfolio, User, ApiResponse, PaginatedResponse } from '../types';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 class ApiService {
   private async request<T>(
@@ -43,9 +43,15 @@ class ApiService {
   }
 
   async signup(name: string, email: string, password: string): Promise<ApiResponse<{ user: User; token: string }>> {
-    return this.request('/auth/signup', {
+    return this.request('/auth/register', {
       method: 'POST',
-      body: JSON.stringify({ name, email, password }),
+      body: JSON.stringify({ 
+        firstName: name.split(' ')[0] || name,
+        lastName: name.split(' ')[1] || '',
+        username: email.split('@')[0],
+        email, 
+        password 
+      }),
     });
   }
 
@@ -103,6 +109,42 @@ class ApiService {
     return this.request(`/portfolios/${id}/unpublish`, {
       method: 'POST',
     });
+  }
+
+  // Public portfolio endpoints (no auth required)
+  async getPublicPortfolio(slug: string): Promise<ApiResponse<Portfolio>> {
+    const url = `${API_BASE_URL}/public/portfolios/${slug}`;
+    
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'An error occurred');
+      }
+
+      return data;
+    } catch (error) {
+      console.error('API request failed:', error);
+      throw error;
+    }
+  }
+
+  async downloadPortfolioHTML(slug: string): Promise<Blob> {
+    const url = `${API_BASE_URL}/public/portfolios/${slug}/download`;
+    
+    try {
+      const response = await fetch(url);
+      
+      if (!response.ok) {
+        throw new Error('Failed to download portfolio');
+      }
+
+      return response.blob();
+    } catch (error) {
+      console.error('Download failed:', error);
+      throw error;
+    }
   }
 
   // User endpoints

@@ -93,6 +93,17 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ user, onLogout }) => {
     console.log('Preview portfolio:', portfolioId);
   };
 
+  const handleUpdatePortfolio = (portfolioId: string, updates: Partial<Portfolio>) => {
+    setPortfolios(prev =>
+      prev.map(portfolio =>
+        portfolio.id === portfolioId
+          ? { ...portfolio, ...updates, updatedAt: new Date() }
+          : portfolio
+      )
+    );
+    console.log('Updated portfolio:', portfolioId, updates);
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex flex-col">
@@ -117,6 +128,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ user, onLogout }) => {
           onEditPortfolio={handleEditPortfolio}
           onDeletePortfolio={handleDeletePortfolio}
           onPreviewPortfolio={handlePreviewPortfolio}
+          onUpdatePortfolio={handleUpdatePortfolio}
         />
       </div>
     </div>

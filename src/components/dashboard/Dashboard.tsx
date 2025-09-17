@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Portfolio } from '../../types';
 import Button from '../common/Button';
+import SharePortfolioModal from '../portfolio/SharePortfolioModal';
 
 interface DashboardProps {
   portfolios: Portfolio[];
@@ -8,6 +9,7 @@ interface DashboardProps {
   onEditPortfolio: (portfolioId: string) => void;
   onDeletePortfolio: (portfolioId: string) => void;
   onPreviewPortfolio: (portfolioId: string) => void;
+  onUpdatePortfolio?: (portfolioId: string, updates: Partial<Portfolio>) => void;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({
@@ -15,7 +17,8 @@ const Dashboard: React.FC<DashboardProps> = ({
   onCreatePortfolio,
   onEditPortfolio,
   onDeletePortfolio,
-  onPreviewPortfolio
+  onPreviewPortfolio,
+  onUpdatePortfolio
 }) => {
   const [showAIBuilder, setShowAIBuilder] = useState(false);
   const [description, setDescription] = useState('');
@@ -23,6 +26,8 @@ const Dashboard: React.FC<DashboardProps> = ({
   const [suggestedTemplate, setSuggestedTemplate] = useState<string | null>(null);
   const [generatedStructure, setGeneratedStructure] = useState<any>(null);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [selectedPortfolio, setSelectedPortfolio] = useState<Portfolio | null>(null);
 
   // AI Portfolio Generation Logic
   const generatePortfolioFromDescription = async (desc: string) => {
@@ -98,11 +103,35 @@ const Dashboard: React.FC<DashboardProps> = ({
 
   const generateProjectIdeas = (desc: string): string[] => {
     const ideas: string[] = [];
-    if (desc.toLowerCase().includes('web')) ideas.push('Web Application');
-    if (desc.toLowerCase().includes('mobile')) ideas.push('Mobile App');
-    if (desc.toLowerCase().includes('design')) ideas.push('Design Project');
-    if (desc.toLowerCase().includes('business')) ideas.push('Business Solution');
-    return ideas.length > 0 ? ideas : ['Personal Project', 'Creative Work'];
+    
+    if (desc.toLowerCase().includes('web')) {
+      ideas.push('Personal Website', 'E-commerce Platform');
+    }
+    if (desc.toLowerCase().includes('mobile')) {
+      ideas.push('Mobile App', 'React Native Project');
+    }
+    if (desc.toLowerCase().includes('design')) {
+      ideas.push('UI/UX Case Study', 'Brand Identity Project');
+    }
+    
+    return ideas.length > 0 ? ideas : ['Portfolio Website', 'Creative Project'];
+  };
+
+  const handleSharePortfolio = (portfolio: Portfolio) => {
+    setSelectedPortfolio(portfolio);
+    setShareModalOpen(true);
+  };
+
+  const handleTogglePublic = async (isPublic: boolean) => {
+    if (!selectedPortfolio || !onUpdatePortfolio) return;
+    
+    try {
+      const updates = { isPublic };
+      onUpdatePortfolio(selectedPortfolio.id, updates);
+      setSelectedPortfolio({ ...selectedPortfolio, isPublic });
+    } catch (error) {
+      console.error('Failed to update portfolio visibility:', error);
+    }
   };
 
   const handleCreateWithAI = () => {
@@ -410,6 +439,16 @@ const Dashboard: React.FC<DashboardProps> = ({
                           👁️ Preview
                         </Button>
                         <Button
+                          onClick={() => handleSharePortfolio(portfolio)}
+                          variant="outline"
+                          size="sm"
+                          className="border-green-300 text-green-600 hover:bg-green-50"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
+                          </svg>
+                        </Button>
+                        <Button
                           onClick={() => onDeletePortfolio(portfolio.id)}
                           variant="danger"
                           size="sm"
@@ -428,6 +467,19 @@ const Dashboard: React.FC<DashboardProps> = ({
           </>
         )}
       </div>
+
+      {/* Share Portfolio Modal */}
+      {selectedPortfolio && (
+        <SharePortfolioModal
+          portfolio={selectedPortfolio}
+          isOpen={shareModalOpen}
+          onClose={() => {
+            setShareModalOpen(false);
+            setSelectedPortfolio(null);
+          }}
+          onTogglePublic={handleTogglePublic}
+        />
+      )}
     </div>
   );
 };
