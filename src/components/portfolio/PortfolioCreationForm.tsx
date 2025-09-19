@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
@@ -17,7 +17,6 @@ const SECTIONS = [
 
 const PortfolioCreationForm: React.FC = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
   const selectedTemplate = searchParams.get('template') || 'modern';
   const [showPreview, setShowPreview] = useState(false);
