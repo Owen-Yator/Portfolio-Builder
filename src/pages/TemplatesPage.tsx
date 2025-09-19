@@ -1,7 +1,8 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const Templates: React.FC = () => {
+const TemplatesPage: React.FC = () => {
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
   
   const templates = [
@@ -116,7 +117,7 @@ const Templates: React.FC = () => {
           
           <div className="flex space-x-4">
             <Link
-              to="/editor"
+              to="/create"
               className={`flex-1 ${template.accent} text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity text-center`}
             >
               Use This Template
@@ -218,7 +219,7 @@ const Templates: React.FC = () => {
                 {/* Actions */}
                 <div className="flex space-x-3">
                   <Link
-                    to="/editor"
+                    to="/create"
                     className={`flex-1 ${template.accent} text-white px-4 py-2 rounded-lg font-semibold hover:opacity-90 transition-opacity text-center text-sm`}
                   >
                     Use Template
@@ -244,7 +245,7 @@ const Templates: React.FC = () => {
               Perfect for any profession and fully customizable to match your style.
             </p>
             <Link 
-              to="/editor?template=modern"
+              to="/create?template=modern"
               className="inline-flex items-center bg-white text-indigo-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
             >
               Start with Modern Template
@@ -264,4 +265,4 @@ const Templates: React.FC = () => {
   );
 };
 
-export default Templates;
+export default TemplatesPage;

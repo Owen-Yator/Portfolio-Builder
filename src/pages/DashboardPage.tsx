@@ -83,15 +83,15 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ user, onLogout }) => {
     }, 1000);
   }, []);
 
-  const handleCreatePortfolio = () => {
-    // Navigate to template selector or portfolio creation
-    console.log('Create new portfolio');
-  };
+  // const handleCreatePortfolio = () => {
+  //   // Navigate to template selector or portfolio creation
+  //   console.log('Create new portfolio');
+  // };
 
-  const handleEditPortfolio = (portfolioId: string) => {
-    // Navigate to portfolio editor
-    console.log('Edit portfolio:', portfolioId);
-  };
+  // const handleEditPortfolio = (portfolioId: string) => {
+  //   // Navigate to portfolio editor
+  //   console.log('Edit portfolio:', portfolioId);
+  // };
 
   const handleDeletePortfolio = (portfolioId: string) => {
     if (window.confirm('Are you sure you want to delete this portfolio?')) {
@@ -99,21 +99,21 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ user, onLogout }) => {
     }
   };
 
-  const handlePreviewPortfolio = (portfolioId: string) => {
-    // Navigate to portfolio preview
-    console.log('Preview portfolio:', portfolioId);
-  };
+  // const handlePreviewPortfolio = (portfolioId: string) => {
+  //   // Navigate to portfolio preview
+  //   console.log('Preview portfolio:', portfolioId);
+  // };
 
-  const handleUpdatePortfolio = (portfolioId: string, updates: Partial<Portfolio>) => {
-    setPortfolios(prev =>
-      prev.map(portfolio =>
-        portfolio.id === portfolioId
-          ? { ...portfolio, ...updates, updatedAt: new Date() }
-          : portfolio
-      )
-    );
-    console.log('Updated portfolio:', portfolioId, updates);
-  };
+  // const handleUpdatePortfolio = (portfolioId: string, updates: Partial<Portfolio>) => {
+  //   setPortfolios(prev =>
+  //     prev.map(portfolio =>
+  //       portfolio.id === portfolioId
+  //         ? { ...portfolio, ...updates, updatedAt: new Date() }
+  //         : portfolio
+  //     )
+  //   );
+  //   console.log('Updated portfolio:', portfolioId, updates);
+  // };
 
   if (isLoading) {
     return (
