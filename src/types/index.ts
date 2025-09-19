@@ -1,3 +1,44 @@
+// Enhanced Types with better specificity
+export interface ExperienceItem {
+  id: number;
+  company: string;
+  position: string;
+  duration: string;
+  location: string;
+  description: string;
+}
+
+export interface ProjectItem {
+  id: number;
+  name: string;
+  description: string;
+  technologies: string;
+  url: string;
+  github: string;
+}
+
+export interface PortfolioData {
+  fullName: string;
+  title: string;
+  email: string;
+  phone: string;
+  location: string;
+  bio: string;
+  skills: string[];
+  experience: ExperienceItem[];
+  education: any[]; // Can be enhanced later
+  projects: ProjectItem[];
+  github: string;
+  linkedin: string;
+  website: string;
+  twitter: string;
+  languages: string[];
+  certifications: string[];
+  interests: string[];
+  theme: string;
+  template: string;
+}
+
 // User types
 export interface User {
   id: string;
@@ -12,38 +53,13 @@ export interface Portfolio {
   id: string;
   userId: string;
   title: string;
-  template: TemplateType;
-  sections: PortfolioSection[];
+  template: string;
+  data: PortfolioData;
   isPublic: boolean;
   slug: string;
   createdAt: Date;
   updatedAt: Date;
 }
-
-export interface PortfolioSection {
-  id: string;
-  type: SectionType;
-  title: string;
-  content: any;
-  order: number;
-  isVisible: boolean;
-}
-
-export type SectionType = 
-  | 'hero'
-  | 'about'
-  | 'experience'
-  | 'projects'
-  | 'skills'
-  | 'education'
-  | 'contact';
-
-export type TemplateType = 
-  | 'modern'
-  | 'classic'
-  | 'minimal'
-  | 'creative'
-  | 'professional';
 
 // Auth types
 export interface LoginCredentials {
