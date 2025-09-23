@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Portfolio } from '../../types';
 import Button from '../common/Button';
-import SharePortfolioModal from '../portfolio/SharePortfolioModal';
 
 interface DashboardProps {
   portfolios: Portfolio[];
@@ -411,7 +410,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                         </div>
                         <div className="flex items-center text-sm text-gray-600">
                           <span className="mr-2">📑</span>
-                          <span className="font-medium">{portfolio.sections.length} sections</span>
+                          <span className="font-medium">{portfolio.template} template</span>
                         </div>
                         <div className="flex items-center text-sm text-gray-600">
                           <span className="mr-2">📅</span>
@@ -468,17 +467,27 @@ const Dashboard: React.FC<DashboardProps> = ({
         )}
       </div>
 
-      {/* Share Portfolio Modal */}
-      {selectedPortfolio && (
-        <SharePortfolioModal
-          portfolio={selectedPortfolio}
-          isOpen={shareModalOpen}
-          onClose={() => {
-            setShareModalOpen(false);
-            setSelectedPortfolio(null);
-          }}
-          onTogglePublic={handleTogglePublic}
-        />
+      {/* Share Portfolio Modal - Placeholder */}
+      {selectedPortfolio && shareModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg max-w-md w-full mx-4">
+            <h3 className="text-lg font-bold mb-4">Share Portfolio</h3>
+            <p className="text-gray-600 mb-4">
+              Portfolio: {selectedPortfolio.title}
+            </p>
+            <div className="flex justify-end space-x-2">
+              <button
+                onClick={() => {
+                  setShareModalOpen(false);
+                  setSelectedPortfolio(null);
+                }}
+                className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

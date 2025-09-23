@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 
 const PreviewPage: React.FC = () => {
@@ -169,9 +169,9 @@ const PreviewPage: React.FC = () => {
             </div>
             
             <div className="flex justify-center space-x-4">
-              <span className="px-4 py-2 bg-white bg-opacity-20 rounded-full text-sm">📧 {portfolioData.email}</span>
-              <span className="px-4 py-2 bg-white bg-opacity-20 rounded-full text-sm">📱 {portfolioData.phone}</span>
-              <span className="px-4 py-2 bg-white bg-opacity-20 rounded-full text-sm">📍 {portfolioData.location}</span>
+              <span className="px-4 py-2 bg-white bg-opacity-20 rounded-full text-sm">?? {portfolioData.email}</span>
+              <span className="px-4 py-2 bg-white bg-opacity-20 rounded-full text-sm">?? {portfolioData.phone}</span>
+              <span className="px-4 py-2 bg-white bg-opacity-20 rounded-full text-sm">?? {portfolioData.location}</span>
             </div>
           </div>
         </div>
@@ -299,7 +299,7 @@ const PreviewPage: React.FC = () => {
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-8">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-gray-400">© 2024 {portfolioData.fullName}. Built with Portfolio Builder.</p>
+          <p className="text-gray-400">? 2024 {portfolioData.fullName}. Built with Portfolio Builder.</p>
         </div>
       </footer>
 
