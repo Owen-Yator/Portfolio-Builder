@@ -2,6 +2,13 @@ import { Portfolio, User, ApiResponse, PaginatedResponse } from '../types';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
+// Request timeout in milliseconds
+const REQUEST_TIMEOUT = 10000;
+
+// Cache for GET requests
+const cache = new Map<string, { data: any; timestamp: number }>();
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
 class ApiService {
   private async request<T>(
     endpoint: string,
@@ -10,12 +17,21 @@ class ApiService {
     const url = `${API_BASE_URL}${endpoint}`;
     const token = localStorage.getItem('authToken');
 
+    // Check cache for GET requests
+    if (!options.method || options.method === 'GET') {
+      const cached = cache.get(url);
+      if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+        return cached.data;
+      }
+    }
+
     const config: RequestInit = {
       headers: {
         'Content-Type': 'application/json',
         ...(token && { Authorization: `Bearer ${token}` }),
         ...options.headers,
       },
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT),
       ...options,
     };
 
@@ -24,14 +40,53 @@ class ApiService {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || 'An error occurred');
+        // Handle specific HTTP status codes
+        if (response.status === 401) {
+          localStorage.removeItem('authToken');
+          window.location.href = '/login';
+          throw new Error('Authentication expired. Please login again.');
+        }
+        if (response.status === 403) {
+          throw new Error('You do not have permission to perform this action.');
+        }
+        if (response.status === 404) {
+          throw new Error('The requested resource was not found.');
+        }
+        if (response.status >= 500) {
+          throw new Error('Server error. Please try again later.');
+        }
+        throw new Error(data.message || `Request failed with status ${response.status}`);
+      }
+
+      // Cache successful GET requests
+      if (!options.method || options.method === 'GET') {
+        cache.set(url, { data, timestamp: Date.now() });
       }
 
       return data;
     } catch (error) {
+      if (error instanceof Error) {
+        if (error.name === 'AbortError') {
+          throw new Error('Request timeout. Please check your connection and try again.');
+        }
+        if (error.name === 'TypeError') {
+          throw new Error('Network error. Please check your internet connection.');
+        }
+      }
       console.error('API request failed:', error);
       throw error;
     }
+  }
+
+  // Clear cache method
+  clearCache(): void {
+    cache.clear();
+  }
+
+  // Clear specific cache entry
+  clearCacheEntry(endpoint: string): void {
+    const url = `${API_BASE_URL}${endpoint}`;
+    cache.delete(url);
   }
 
   // Auth endpoints
